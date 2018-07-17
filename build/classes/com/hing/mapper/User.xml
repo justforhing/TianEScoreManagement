@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 此处的id对应于Mapper类中对应的方法名称,resultType指明返回的类型 -->
+	<mapper namespace="com.hing.mapper.UserMapper">
+		<insert id="add" parameterType="User">
+			insert into users values(#{id},#{password},#{type})
+		</insert>
+		
+		<delete parameterType="String" id="delete">
+			delete from users where id=#{id}
+		</delete>
+		
+		<update parameterType="User" id="update">
+			update users set password=#{password},type=#{type} where id=#{id}
+		</update>
+		
+		<select id="get" parameterType="String" resultType="User">
+			select * from users where id = #{id}
+		</select>
+		
+		<select id="list" resultType="User">
+			select * from users
+		</select>
+	</mapper>

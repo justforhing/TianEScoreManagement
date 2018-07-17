@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 此处的id对应于Mapper类中对应的方法名称,resultType指明返回的类型 -->
+	<mapper namespace="com.hing.mapper.CourseMapper"> 
+		<resultMap type="Course" id="courseBean">
+			<id column="cid" property="id"/>
+			<result column="cname" property="name"/>
+			<association property="scheme" javaType="Scheme">
+				<id column="sid" property="id"/>
+				<result column="sname" property="name"/>
+			</association>
+		</resultMap>
+			
+		<insert id="add" parameterType="Course">
+			insert into courses values(#{id},#{name},#{scheme.id});
+		</insert>
+		
+		<delete parameterType="String" id="delete">
+			delete from courses where id=#{id}
+		</delete>
+		
+		<update parameterType="Course" id="update">
+			update courses set name=#{name},scheme_id=#{scheme.id} where id=#{id}
+		</update>
+		
+		<select id="get" parameterType="String" resultType="Course">
+			select * from courses where id = #{id}
+		</select>
+		
+		<select id="getCourseByScheme" parameterType="String" resultMap="courseBean">
+			select c.id 'cid',c.name'cname',s.id'sid',s.name'sname' from courses c left join schemes s on c.scheme_id=s.id  where scheme_id = #{id}
+		</select>
+			
+		<select id="list" resultMap="courseBean">
+			select c.id 'cid',c.name'cname',s.id'sid',s.name'sname' from courses c left join schemes s on c.scheme_id=s.id 
+		</select>
+	</mapper>

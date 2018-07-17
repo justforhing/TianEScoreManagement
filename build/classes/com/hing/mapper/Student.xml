@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 此处的id对应于Mapper类中对应的方法名称,resultType指明返回的类型 -->
+	<mapper namespace="com.hing.mapper.StudentMapper"> 
+		  <resultMap type="Student" id="studentBean">
+			<id column="sid" property="id"/>
+			<result column="sname" property="name"/>
+			<result column="ssex" property="sex"/>
+			<result column="sage" property="age"/>
+			<result column="semail" property="email"/>
+			<result column="stel" property="tel"/>
+			<result column="sid_number" property="id_number"/>
+			
+			<!-- 多对一的关系  property：指的是属性名称，javaType:指的是属性的类型-->
+			<association property="myclass" javaType="Class">
+				<id column="cid" property="id"/>
+				<result column="cname" property="name"/>
+			</association> 
+		</resultMap>
+		
+		<insert id="add" parameterType="Student">
+			insert into students values(#{id},#{name},#{sex},#{age},#{email},#{tel},#{id_number},#{myclass.id})
+		</insert>
+		
+		<delete parameterType="String" id="delete">
+			delete from students where id=#{id}
+		</delete>
+		
+		<update parameterType="Student" id="update">
+			update students set name=#{name},sex=#{sex},age=#{age},email=#{email},tel=#{tel},id_number=#{id_number},class_id=#{myclass.id} where id=#{id}
+		</update>
+		
+		<select id="get" parameterType="String" resultMap="studentBean">
+			select s.id'sid',s.name'sname',s.sex'ssex',s.age'sage',s.email'semail',s.tel'stel',s.id_number'sid_number',c.id'cid',c.name'cname' from students s left join classes c on s.class_id=c.id where s.id = #{id}
+		</select>
+		
+		<select id="getStudentByClass" parameterType="String" resultMap="studentBean">
+			select s.id'sid',s.name'sname',s.sex'ssex',s.age'sage',s.email'semail',s.tel'stel',s.id_number'sid_number',c.id'cid',c.name'cname' from students s left join classes c on s.class_id=c.id where s.class_id = #{id}
+		</select>
+		
+		<select id="getStudentByCourse" parameterType="String" resultMap="studentBean">
+			select s.id'sid',s.name'sname',s.sex'ssex',s.age'sage',s.email'semail',s.tel'stel',s.id_number'sid_number',c.id'cid',c.name'cname' from students s left join classes c on s.class_id=c.id left join studies co on co.student_id=s.id where co.course_id=#{id}
+		</select>
+		
+		<select id="list" resultMap="studentBean">
+			select s.id'sid',s.name'sname',s.sex'ssex',s.age'sage',s.email'semail',s.tel'stel',s.id_number'sid_number',c.id'cid',c.name'cname' from students s left join classes c on s.class_id=c.id
+		</select>
+	</mapper>

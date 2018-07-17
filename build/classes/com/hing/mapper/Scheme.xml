@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 此处的id对应于Mapper类中对应的方法名称,resultType指明返回的类型 -->
+	<mapper namespace="com.hing.mapper.SchemeMapper"> 
+			
+		<insert id="add" parameterType="Scheme">
+			insert into schemes values(#{id},#{name});
+		</insert>
+		
+		<delete parameterType="String" id="delete">
+			delete from schemes where id=#{id}
+		</delete>
+		
+		<update parameterType="Scheme" id="update">
+			update schemes set name=#{name} where id=#{id}
+		</update>
+		
+		<select id="get" parameterType="String" resultType="Scheme">
+			select * from schemes where id = #{id}
+		</select>
+			
+		<select id="list" resultType="Scheme">
+			select * from schemes
+		</select>
+	</mapper>

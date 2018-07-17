@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 此处的id对应于Mapper类中对应的方法名称,resultType指明返回的类型 -->
+	<mapper namespace="com.hing.mapper.StudyMapper"> 
+		<resultMap type="Study" id="studyBean">
+			<result column="score" property="score"/>
+			<result column="time" property="time"/>
+			<association property="student" javaType="Student">
+				<id column="sid" property="id"/>
+				<result column="sname" property="name"/>
+				<result column="ssex" property="sex"/>
+				<result column="sage" property="age"/>
+				<result column="semail" property="email"/>
+				<result column="stel" property="tel"/>
+				<result column="sid_number" property="id_number"/>
+			</association>
+			<association property="course" javaType="Course">
+				<id column="cid" property="id"/>
+				<result column="cname" property="name"/>
+				<association property="scheme" javaType="Scheme">
+					<id column="sid" property="id"/>
+					<result column="sname" property="name"/>
+				</association>
+			</association>
+		</resultMap>
+		
+		<insert id="add" parameterType="Study">
+			insert into studies values(#{student.id},#{course.id},#{score});
+		</insert>
+		
+		<delete parameterType="String" id="delete">
+			delete from studies where student_id=#{student.id} and course_id=#{course.id}
+		</delete>
+		
+		<update parameterType="Study" id="update">
+			update studies set score=#{score} where student_id=#{student.id} and course_id=#{course.id}
+		</update>
+		
+		<select id="getStudyByCourse" parameterType="String" resultMap="studyBean">
+			select s.id'sid',s.name'sname',s.sex'ssex',s.age'sage',s.tel'stel',s.id_number'sid_number',c.id'cid',c.name'cname',sc.id'sid',sc.name'sname',score,time from studies st left join students s on st.student_id=s.id left join courses c on st.course_id=c.id left join schemes sc on c.scheme_id=sc.id where st.course_id=#{id}
+		</select>	
+		
+		<select id="getStudyByStudent" parameterType="String" resultMap="studyBean">
+			select s.id'sid',s.name'sname',s.sex'ssex',s.age'sage',s.tel'stel',s.id_number'sid_number',c.id'cid',c.name'cname',sc.id'sid',sc.name'sname',score,time from studies st left join students s on st.student_id=s.id left join courses c on st.course_id=c.id left join schemes sc on c.scheme_id=sc.id where st.student_id=#{id}
+		</select>
+		
+		<select id="list" resultMap="studyBean">
+			select s.id'sid',s.name'sname',s.sex'ssex',s.age'sage',s.tel'stel',s.id_number'sid_number',c.id'cid',c.name'cname',sc.id'sid',sc.name'sname',score,time from studies st left join students s on st.student_id=s.id left join courses c on st.course_id=c.id left join schemes sc on c.scheme_id=sc.id
+		</select>	
+		
+	</mapper>

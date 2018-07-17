@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 此处的id对应于Mapper类中对应的方法名称,resultType指明返回的类型 -->
+	<mapper namespace="com.hing.mapper.TeachMapper">
+		<resultMap type="Teach" id="teachBean">
+			<result column="time" property="time"/> 
+			<association property="course" javaType="Course">
+				<id column="cid" property="id"/>
+				<result column="cname" property="name"/>
+				<association property="scheme" javaType="Scheme">
+					<id column="sid" property="id"/>
+					<result column="sname" property="name"/>
+				</association>
+			</association>
+			<association property="teacher" javaType="Teacher">
+				<id column="tid" property="id"/>
+				<result column="tname" property="name"/>
+				<result column="tsex" property="sex"/>
+				<result column="tage" property="age"/>
+				<result column="tmajor" property="major"/>
+				<result column="temail" property="email"/>
+				<result column="ttel" property="tel"/>
+				<result column="tid_number" property="id_number"/>
+			</association>
+			
+		</resultMap>
+		
+		<insert id="add" parameterType="Teach">
+			insert into teaches values(#{course.id},#{teacher.id},#{time});
+		</insert>
+		
+		<delete parameterType="String" id="delete">
+			delete from teaches where course_id=#{course.id} and teacher_id=#{teacher.id}
+		</delete>
+		
+		<update parameterType="Teach" id="update">
+			update teaches set time=#{time} where course_id=#{course.id} and teacher_id=#{teacher.id}
+		</update>
+		
+		<select id="getTeachByCourse" parameterType="String" resultMap="teachBean">
+			select c.id'cid',c.name'cname',s.id'sid',s.name'sname',t.id'tid',t.name'tname',t.sex'tsex',t.age'tage',t.major'tmajor',t.tel'ttel',t.id_number'tid_number',time from teaches te left join courses c on te.course_id=c.id left join  schemes s on c.scheme_id=s.id left join teachers t on te.teacher_id=t.id where te.course_id=#{id}
+		</select>
+		
+		<select id="getTeachByTeacher" parameterType="String" resultMap="teachBean">
+			select c.id'cid',c.name'cname',s.id'sid',s.name'sname',t.id'tid',t.name'tname',t.sex'tsex',t.age'tage',t.major'tmajor',t.tel'ttel',t.id_number'tid_number',time from teaches te left join courses c on te.course_id=c.id left join  schemes s on c.scheme_id=s.id left join teachers t on te.teacher_id=t.id where te.teacher_id=#{id}
+		</select>
+				
+		<select id="list" resultMap="teachBean">
+			select c.id'cid',c.name'cname',s.id'sid',s.name'sname',t.id'tid',t.name'tname',t.sex'tsex',t.age'tage',t.major'tmajor',t.tel'ttel',t.id_number'tid_number',time from teaches te left join courses c on te.course_id=c.id left join  schemes s on c.scheme_id=s.id left join teachers t on te.teacher_id=t.id
+		</select>	
+		
+	</mapper>

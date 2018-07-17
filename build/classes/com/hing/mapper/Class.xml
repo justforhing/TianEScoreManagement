@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 此处的id对应于Mapper类中对应的方法名称,resultType指明返回的类型 -->
+	<mapper namespace="com.hing.mapper.ClassMapper"> 
+		<resultMap type="com.hing.pojo.Class" id="classBean">
+			<id column="cid" property="id"/>
+			<result column="cname" property="name"/>
+			<association property="teacher" javaType="Teacher">
+				<id column="tid" property="id"/>
+				<result column="tname" property="name"/>
+				<result column="tsex" property="sex"/>
+				<result column="tage" property="age"/>
+				<result column="tmajor" property="major"/>
+				<result column="temail" property="email"/>
+				<result column="ttel" property="tel"/>
+				<result column="tid_number" property="id_number"/>
+			</association>
+		</resultMap>
+		
+		<insert id="add" parameterType="Class">
+			insert into classes values(#{id},#{name},#{teacher.id});
+		</insert>
+		
+		<delete parameterType="String" id="delete">
+			delete from classes where id=#{id}
+		</delete>
+		
+		<update parameterType="Class" id="update">
+			update classes set name=#{name},teacher_id=#{teacher.id} where id=#{id}
+		</update>
+		
+		<select id="get" parameterType="String" resultType="Class">
+			select * from classes where id = #{id}
+		</select>
+		
+		<select id="getClassByTeacher" parameterType="String" resultType="Class">
+			select * from classes where teacher_id = #{id}
+		</select>
+			
+		<select id="list" resultMap="classBean">
+			select c.id 'cid',c.name'cname',t.id'tid',t.name'tname',t.sex'tsex',t.age'tage',t.major'tmajor',t.tel'ttel',t.id_number'tid_number' from classes c left join teachers t on c.teacher_id=t.id 
+		</select>	
+		
+	</mapper>

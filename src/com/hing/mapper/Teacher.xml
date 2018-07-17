@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 此处的id对应于Mapper类中对应的方法名称,resultType指明返回的类型 -->
+	<mapper namespace="com.hing.mapper.TeacherMapper"> 
+		<insert id="add" parameterType="Teacher">
+			insert into teachers values(#{id},#{name},#{sex},#{age},#{major},#{email},#{tel},#{id_number})
+		</insert>
+		
+		<delete parameterType="String" id="delete">
+			delete from teachers where id=#{id}
+		</delete>
+		
+		<update parameterType="Teacher" id="update">
+			update teachers set name=#{name},sex=#{sex},age=#{age},major=#{major},email=#{email},tel=#{tel},id_number=#{id_number} where id=#{id}
+		</update>
+		
+		<select id="get" parameterType="String" resultType="Teacher">
+			select * from teachers where id = #{id}
+		</select>
+		
+		<select id="list" resultType="Teacher">
+			select * from teachers
+		</select>
+	</mapper>
