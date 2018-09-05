@@ -39,4 +39,25 @@ public class UserServiceImpl implements UserService{
 		return userMapper.get(id);
 	}
 
+	@Override
+	public List<User> getTeachers() {
+		int type = 2;
+		return userMapper.getUserByType(type);
+	}
+
+	@Override
+	public List<User> getStudents() {
+		int type = 3;
+		return userMapper.getUserByType(type);
+	}
+
+	@Override
+	public boolean isExist(String id) {
+		User user = userMapper.get(id);
+		if(user == null) {
+			return false;
+		}
+		return true;
+	}
+
 }

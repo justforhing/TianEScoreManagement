@@ -15,4 +15,10 @@ public void add(User user);
 	public User get(String id);
 	
 	public List<User> list();
+	
+	public List<User> getTeachers();
+	
+	public List<User> getStudents();
+	
+	public boolean isExist(String id);
 }

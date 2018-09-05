@@ -1,0 +1,224 @@
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<h3 class="text-center">
+				天峨学校教务管理系统
+			</h3> <button class="btn btn-small" type="button">按钮</button>
+			<div class="navbar">
+				<div class="navbar-inner">
+					<div class="container-fluid">
+						<a class="btn btn-navbar" data-target=".navbar-responsive-collapse" data-toggle="collapse"></a> <a class="brand" href="#">管理员</a>
+						<div class="nav-collapse collapse navbar-responsive-collapse">
+							<ul class="nav">
+								<li class="active">
+									<a href="#">主页</a>
+								</li>
+								<li>
+									<a href="#userManagement">用户管理</a>
+								</li>
+								<li>
+									<a href="#teacherManagement">教师管理</a>
+								</li>
+								<li>
+									<a href="#studentManagement">学生管理</a>
+								</li>
+								<li>
+									<a href="#schemeManagement">培养方案管理</a>
+								</li>
+								<li>
+									<a href="#courseManagement">课程管理</a>
+								</li>
+								<li>
+									<a href="#classManagement">班级管理</a>
+								</li>
+								<li>
+									<a href="#scoreManagement">成绩管理</a>
+								</li>
+								<li>
+									<a href="#information">密码修改</a>
+								</li>
+							</ul>
+						</div>
+						<div class="tab-content" id="myTabContent">
+							<div class="tab-pane fade in active" id="index">
+								<p>
+									主页内容
+								</p>
+							</div>
+							<div class="tab-pane fade" id="userManagement">
+								<a href="showAllUser">用户管理</a> <a href="importTeachers">从教师中导入</a> <a href="importStudents">从学生中导入</a>
+								<p>
+									用户管理
+								</p>
+							</div>
+							<div class="tab-pane fade" id="teacherManagement">
+								<a href="listTeacher">教师管理</a>
+								<p>
+									教师管理
+								</p>
+							</div>
+							<div class="tab-pane fade" id="studentManagement">
+								<a href="listStudent">学生管理</a>
+								<p>
+									学生管理
+								</p>
+							</div>
+							<div class="tab-pane fade" id="courseManagement">
+								<a href="listCourse">课程管理</a>
+								<p>
+									课程管理
+								</p>
+							</div>
+							<div class="tab-pane fade" id="schemeManagement">
+								<a href="listScheme">培养方案管理</a>
+								<p>
+									培养方案管理
+								</p>
+								<div class="add">
+									<form action="addScheme" method="post">
+									</form>
+								</div>
+								<foreach>
+									<form action="updateScheme" method="post">
+									</form>
+								</foreach>
+								<table>
+									<tbody>
+										<tr>
+											<td>
+												id
+											</td>
+											<td>
+												name
+											</td>
+											<td>
+												course
+											</td>
+											<td>
+												delete
+											</td>
+											<td>
+												edit
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input name="id" type="text" />
+											</td>
+											<td>
+												<input name="name" type="text" />
+											</td>
+											<td>
+												<input type="submit" value="添加" />
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input name="id" type="text" value="${s.id}" />
+											</td>
+											<td>
+												<input name="name" type="text" value="${s.name}" />
+											</td>
+											<td>
+												<a href="showCourseByScheme?id=${s.id}"><input type="button" value="查看课程" /></a>
+											</td>
+											<td>
+												<a href="deleteScheme?id=${s.id}"><input type="button" value="删除" /></a>
+											</td>
+											<td>
+												<input type="submit" value="修改" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-pane fade" id="classManagement">
+								<a href="listClass">班级管理</a>
+								<p>
+									班级管理
+								</p>
+								<div class="add">
+									<form action="addClass" method="post">
+									</form>
+								</div>
+								<foreach>
+									<form action="updateClass" method="post">
+									</form>
+								</foreach>
+								<table>
+									<tbody>
+										<tr>
+											<td>
+												id
+											</td>
+											<td>
+												name
+											</td>
+											<td>
+												teacher
+											</td>
+											<td>
+												show
+											</td>
+											<td>
+												delete
+											</td>
+											<td>
+												edit
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input name="id" type="text" />
+											</td>
+											<td>
+												<input name="name" type="text" />
+											</td>
+											<td>
+												<select name="teacher.id"><option value="0">请选择</option><option value="${t.id }">${t.name }</option></select>
+											</td>
+											<td>
+												<input type="submit" value="添加" />
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<input name="id" type="text" value="${c.id}" />
+											</td>
+											<td>
+												<input name="name" type="text" value="${c.name}" />
+											</td>
+											<td>
+												<select name="teacher.id"><option value="${c.teacher.id}">${c.teacher.name}</option><option value="${t.id }">${t.name }</option></select>
+											</td>
+											<td>
+												<a href="showClassStudents?class_id=${c.id}"><input type="button" value="查看学生" /></a>
+											</td>
+											<td>
+												<a href="deleteClass?id=${c.id}"><input type="button" value="删除" /></a>
+											</td>
+											<td>
+												<input type="submit" value="修改" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-pane fade" id="scoreManagement">
+								<a href="listScore">成绩管理</a>
+								<p>
+									成绩管理
+								</p>
+							</div>
+							<div class="tab-pane fade" id="information">
+								<form action="updateUser" method="post">
+									<input name="id" readonly="readonly" type="hidden" value="${currentUser.id }" /><input name="type" readonly="readonly" type="hidden" value="${type }" /> 当前密码：<input name="currentPassword" type="text" /><br /><br /> 新密码：<input id="password" name="password" type="password" /><br /><br /> 密码确认：<input id="secondPassword" name="secondPassword" type="password" /><br /><br /><input type="submit" value="修改" />
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

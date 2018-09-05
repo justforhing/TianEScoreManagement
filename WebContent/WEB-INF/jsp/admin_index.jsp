@@ -32,7 +32,8 @@ p{
 	}
 	
 </script>
-<ul id="myTab" class="nav nav-tabs">
+<h3 class="text-center">天峨学校教务管理系统</h3>
+<ul id="myTab"  class="nav nav-tabs">
    <li class="active">
       <a href="#index" data-toggle="tab">
          	主页
@@ -46,32 +47,179 @@ p{
    <li><a href="#classManagement" data-toggle="tab">班级管理</a></li>
    <li><a href="#scoreManagement" data-toggle="tab">成绩管理</a></li>
    <li><a href="#information" data-toggle="tab">修改密码</a></li>
+   <li><a href="logOut" >退出系统</a></li>
 </ul>
 <div id="myTabContent" class="tab-content">
 	<div class="tab-pane fade in active" id="index">
       <p>主页内容</p>
    </div>
    <div class="tab-pane fade" id="userManagement">
-      <a href="showAllUser">用户管理</a>
-      <a href="importTeachers">从教师中导入</a>
-      <a href="importStudents">从学生中导入</a>
-      <p>用户管理</p>
+      <a href="importTeachers">批量从教师中导入</a>
+      <a href="importStudents">批量从学生中导入</a>
+      <table align='center' border='1' cellspacing='0'>
+		<div class="add">
+			<form action="addUser" method="post">
+				<td><input  name="id" type="text" /></td>
+		        <td><input  name="password" type="text" /></td>
+		        <td><input  name="type" type="text" /></td>       
+		        <td><input type="submit" value="添加"/></td>
+			</form>		
+		</div>
+	    <tr>
+	        <td>id</td>
+	        <td>password</td>
+	        <td>type</td>
+	        <td>delete</td>
+	        <td>edit</td>
+	    </tr>
+	    <c:forEach items="${us}" var="c" varStatus="st">
+	    	<form action="updateUser" method="post">
+	        	<tr>
+	        		<td><input readOnly="readonly" name="id" type="text" value="${c.id}"/></td>
+		            <td><input readOnly="readonly" name="password" type="text" value="${c.password}"/></td>
+		            <td><input type="text" name="type" value="${c.type}"/></td>  
+		            <td><a href="deleteUser?id=${c.id}"><input type="button" value="删除"/></a></td>
+		            <td><input type="submit" value="修改"/></td>
+	        	</tr>
+	        </form>  
+	    </c:forEach>
+	</table>
    </div>
    <div class="tab-pane fade" id="teacherManagement">
-      <a href="listTeacher">教师管理</a>
-      <p>教师管理</p>
+      <table align='center' border='1' cellspacing='0'>
+	
+	    <tr>
+	        <td>id</td>
+	        <td>name</td>
+	        <td>sex</td>
+	        <td>age</td>
+	        <td>major</td>
+	        <td>email</td>
+	        <td>tel</td>
+	        <td>id_number</td>
+	    </tr>
+	    <div class="add">
+			<form action="addTeacher" method="post">
+				<td><input  name="id" type="text" /></td>
+		        <td><input  name="name" type="text" /></td>
+		        <td><input  name="sex" type="text" /></td>  
+		        <td><input  name="age" type="text" /></td> 
+		        <td><input  name="major" type="text" /></td> 
+		        <td><input  name="email" type="text" /></td> 
+		        <td><input  name="tel" type="text""/></td> 
+		        <td><input  name="id_number" type="text" /></td>      
+		        <td><input type="submit" value="添加"/></td>
+			</form>		
+		</div>
+	    <c:forEach items="${ts}" var="t" varStatus="st">
+	    	<form action="updateTeacher" method="post">
+	        	<tr>
+	        		<td><input readOnly="readonly" name="id" type="text" value="${t.id}"/></td>
+		            <td><input  name="name" type="text" value="${t.name}"/></td>
+		            <td><input  name="sex" type="text" value="${t.sex}"/></td>  
+		            <td><input  name="age" type="text" value="${t.age}"/></td> 
+		            <td><input  name="major" type="text" value="${t.major}"/></td> 
+		            <td><input  name="email" type="text" value="${t.email}"/></td> 
+		            <td><input  name="tel" type="text" value="${t.tel}"/></td> 
+		            <td><input  name="id_number" type="text" value="${t.id_number}"/></td>      
+		            <td><a href="deleteTeacher?id=${t.id}"><input type="button" value="删除"/></a></td>
+		            <td><input type="submit" value="修改"/></td>
+	        	</tr>
+	        </form>  
+	    </c:forEach>
+	</table>
    </div>
    <div class="tab-pane fade" id="studentManagement">
-   		<a href="listStudent">学生管理</a>
-      <p>学生管理</p>
+        <table align='center' border='1' cellspacing='0'>
+		    <tr>
+		        <td>id</td>
+		        <td>name</td>
+		        <td>teacher</td>
+		        <td>show</td>
+		        <td>delete</td>
+		        <td>edit</td>
+		    </tr>
+		    <div class="add">
+				<form action="addClass" method="post">
+					<td><input  name="id" type="text" /></td>
+			        <td><input  name="name" type="text" /></td>
+			        <td>
+				        <select name="teacher.id">
+				        	<option value="0">请选择</option>
+				        	<c:forEach items="${ts }" var="t">
+				        		<option  value ="${t.id }">${t.name }</option>
+				        	</c:forEach>  	
+				        </select>
+			        </td>      
+			        <td><input type="submit" value="添加"/></td>
+				</form>		
+			</div>
+		    <c:forEach items="${cs}" var="c" varStatus="st">
+		    	<form action="updateClass" method="post">
+		        	<tr>
+		        		<td><input  name="id" type="text" value="${c.id}"/></td>
+			            <td><input  name="name" type="text" value="${c.name}"/></td> 
+			            <td>
+					        <select name="teacher.id">
+					        	<option value="${c.teacher.id}">${c.teacher.name}</option>
+					        	<c:forEach items="${ts }" var="t">
+					        		<option  value ="${t.id }">${t.name }</option>
+					        	</c:forEach>  	
+					        </select>
+			        	</td>     
+			        	<td><a href="showClassStudents?class_id=${c.id}"><input type="button" value="查看学生"/></a></td>
+			            <td><a href="deleteClass?id=${c.id}"><input type="button" value="删除"/></a></td>
+			            <td><input type="submit" value="修改"/></td>
+		        	</tr>
+		        </form>  
+		    </c:forEach>
+		</table>
    </div>
    <div class="tab-pane fade" id="courseManagement">
-   	  <a href="listCourse">课程管理</a>
-      <p>课程管理</p>
+      <table align='center' border='1' cellspacing='0'>
+	    <tr>
+	        <td>id</td>
+	        <td>name</td>
+	        <td>schemeName</td>
+	        <td>delete</td>
+	        <td>edit</td>
+	    </tr>
+	    <div class="add">
+			<form action="addCourse" method="post">
+				<td><input  name="id" type="text" /></td>
+		        <td><input  name="name" type="text" /></td>
+		        <td>
+			        <select name="scheme.id">
+			        	<option value="0">请选择</option>
+			        	<c:forEach items="${scs }" var="s">
+			        		<option  value ="${s.id }">${s.name }</option>
+			        	</c:forEach>  	
+			        </select>
+		        </td>            
+		        <td><input type="submit" value="添加"/></td>
+			</form>		
+		</div>
+	    <c:forEach items="${ss}" var="s" varStatus="st">
+	    	<form action="updateCourse" method="post">
+	        	<tr>
+	        		<td><input  name="id" type="text" value="${s.id}"/></td>
+		            <td><input  name="name" type="text" value="${s.name}"/></td>
+		            <td>
+			            <select name="scheme.id">
+				        	<option value="${s.scheme.id}">${s.scheme.name}</option>
+				        	<c:forEach items="${scs }" var="sc">
+				        		<option  value ="${sc.id }">${sc.name }</option>
+				        	</c:forEach>  	
+				        </select>
+			        </td>
+		            <td><a href="deleteCourse?id=${s.id}"><input type="button" value="删除"/></a></td>
+		            <td><input type="submit" value="修改"/></td>
+	        	</tr>
+	        </form>  
+	    </c:forEach>
+	</table>
    </div>
    <div class="tab-pane fade" id="schemeManagement">
-      <a href="listScheme">培养方案管理</a>
-      <p>培养方案管理</p>
 	  <table align='center' border='1' cellspacing='0'>
 		    <tr>
 		        <td>id</td>
@@ -101,8 +249,6 @@ p{
 		</table>
    </div>
    <div class="tab-pane fade" id="classManagement">
-   	  <a href="listClass">班级管理</a>
-      <p>班级管理</p>
       <table align='center' border='1' cellspacing='0'>
 		    <tr>
 		        <td>id</td>
@@ -149,8 +295,48 @@ p{
 		</table>
    </div>
    <div class="tab-pane fade" id="scoreManagement">
-   	  <a href="listScore">成绩管理</a>
-      <p>成绩管理</p>
+      <table align='center' border='1' cellspacing='0'>
+	    <tr>
+	        <td>id</td>
+	        <td>name</td>
+	        <td>teacher</td>
+	        <td>show</td>
+	        <td>delete</td>
+	        <td>edit</td>
+	    </tr>
+	    <div class="add">
+			<form action="addClass" method="post">
+				<td><input  name="id" type="text" /></td>
+		        <td><input  name="name" type="text" /></td>
+		        <td>
+			        <select name="teacher.id">
+			        	<option value="0">请选择</option>
+			        	<c:forEach items="${ts }" var="t">
+			        		<option  value ="${t.id }">${t.name }</option>
+			        	</c:forEach>  	
+			        </select>
+		        </td>      
+		        <td><input type="submit" value="添加"/></td>
+			</form>		
+		</div>
+	    <c:forEach items="${cs}" var="c" varStatus="st">
+	    	<form action="updateClass" method="post">
+	        	<tr>
+	        		<td><input  name="id" type="text" value="${c.id}"/></td>
+		            <td><input  name="name" type="text" value="${c.name}"/></td> 
+		            <td>
+				        <select name="teacher.id">
+				        	<option value="${c.teacher.id}">${c.teacher.name}</option>
+				        	<c:forEach items="${ts }" var="t">
+				        		<option  value ="${t.id }">${t.name }</option>
+				        	</c:forEach>  	
+				        </select>
+		        	</td>     
+		        	<td><a href="showClassScore?class_id=${c.id}"><input type="button" value="查看班级成绩"/></a></td>		       
+	        	</tr>
+	        </form>  
+	    </c:forEach>
+	</table>
    </div>
    <div class="tab-pane fade" id="information">
    		<form action="updateUser" method="post">

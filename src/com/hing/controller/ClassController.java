@@ -20,7 +20,7 @@ public class ClassController {
 	@Autowired
 	TeacherService teacherService;
 	
-	@RequestMapping("listClass")
+	@RequestMapping("/listClass")
 	public ModelAndView listClass() {
 		ModelAndView mav = new ModelAndView();
 		List<com.hing.pojo.Class> cs = classService.list();

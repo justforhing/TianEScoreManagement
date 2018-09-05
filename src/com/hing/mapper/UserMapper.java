@@ -14,4 +14,6 @@ public interface UserMapper {
 	public User get(String id);
 	
 	public List<User> list();
+	
+	public List<User> getUserByType(int type);
 }

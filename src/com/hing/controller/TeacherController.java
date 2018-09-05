@@ -1,11 +1,6 @@
 package com.hing.controller;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +12,6 @@ import com.hing.pojo.Course;
 import com.hing.pojo.Scheme;
 import com.hing.pojo.Student;
 import com.hing.pojo.Study;
-import com.hing.pojo.Teach;
 import com.hing.pojo.Teacher;
 import com.hing.service.ClassService;
 import com.hing.service.CourseService;
@@ -50,7 +44,6 @@ public class TeacherController {
 	@Autowired
 	TeachService teachService;
 	
-	//教师查看班级学生，非班主任无法查询
 	@RequestMapping("/showClassStudents")
 	public ModelAndView showMyStudents(String class_id) {
 		ModelAndView mav = new ModelAndView();
@@ -78,7 +71,6 @@ public class TeacherController {
 		mav.setViewName("showCourseScore");
 		return mav;
 	}
-	//编辑科目成绩
 	@RequestMapping("/editStudentScore")
 	public ModelAndView showStudentScore(Study study) {
 		
@@ -96,21 +88,20 @@ public class TeacherController {
 	public ModelAndView showClassScore(String class_id) {
 		
 		ModelAndView mav = new ModelAndView();
-		com.hing.pojo.Class myclass = classService.get(class_id);//根据教师获取班级
+		com.hing.pojo.Class myclass = classService.get(class_id);
 		String schemeId = myclass.getId().substring(4, 6);
-		Scheme scheme = schemeService.get(schemeId);//根据班级获取方案
+		Scheme scheme = schemeService.get(schemeId);
 		
-		List<Course> cs = courseService.getCourseByScheme(scheme.getId());//根据方案获取课程，作为表头
+		List<Course> cs = courseService.getCourseByScheme(scheme.getId());
 		
-		List<Object[]> result = new ArrayList<Object[]>();//将会传递的数据
+		List<Object[]> result = new ArrayList<Object[]>();
 		
-		List<Student> ss = studentService.getStudentByClass(class_id);//获取学生列表，用于获取学生人数和获取修读情况
-	
+		List<Student> ss = studentService.getStudentByClass(class_id);
 		
-		int studentCount = ss.size();//获取学生人数
+		int studentCount = ss.size();
 		 
 		for(int i = 0 ; i < studentCount ; i ++) {
-			List<Study> ss1 = studyService.getStudyByStudent(ss.get(i).getId());//根据学号获取当前学生的所有修读情况
+			List<Study> ss1 = studyService.getStudyByStudent(ss.get(i).getId());
 			Object[] obj = {ss1.get(0).getStudent().getName(),ss1};
 			result.add(obj);
 		}//of for i  

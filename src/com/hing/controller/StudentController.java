@@ -40,13 +40,14 @@ public class StudentController {
 	public ModelAndView editMyInformation(Student student) {
 		ModelAndView mav = new ModelAndView();
 		studentService.update(student);
-		
+		System.out.println(student.getSex());
 		mav.setViewName("student_index");
 		return mav;
 	}
 	@RequestMapping("/updateStudent")
 	public ModelAndView updateStudent(Student student) {
 		ModelAndView mav = new ModelAndView();
+		System.out.println(student.getSex());
 		studentService.update(student);
 		
 		mav.setViewName("teacher_index");

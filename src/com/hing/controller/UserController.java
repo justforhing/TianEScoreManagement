@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.hing.pojo.Course;
 import com.hing.pojo.Scheme;
 import com.hing.pojo.Student;
+import com.hing.pojo.Study;
 import com.hing.pojo.Teach;
 import com.hing.pojo.Teacher;
 import com.hing.pojo.User;
@@ -21,6 +24,7 @@ import com.hing.service.ClassService;
 import com.hing.service.CourseService;
 import com.hing.service.SchemeService;
 import com.hing.service.StudentService;
+import com.hing.service.StudyService;
 import com.hing.service.TeachService;
 import com.hing.service.TeacherService;
 import com.hing.service.UserService;
@@ -42,6 +46,8 @@ public class UserController {
 	ClassService classService;
 	@Autowired
 	SchemeService schemeService;
+	@Autowired
+	StudyService studyService;
 	
 	@RequestMapping("/listUser")
 	public ModelAndView listUser() {
@@ -54,42 +60,43 @@ public class UserController {
 		
 		return mav;
 	}
-	@RequestMapping("/loginCheck")
-	public ModelAndView loginCheck(User user) {
+	@RequestMapping("/logOut")
+	public ModelAndView logOut(HttpSession session) {
 		ModelAndView mav = new ModelAndView();
-		User current = userService.get(user.getId());
-		int type = current.getType();
-		mav.addObject("type",type);
-		if(current.getPassword().equals(user.getPassword())) {
-			if(current.getType() == 0) {
+		session.removeAttribute("currentUser");
+		mav.setViewName("index");
+		return mav;
+	}
+	@RequestMapping("/loginCheck")
+	public ModelAndView loginCheck(User user,HttpSession session) {
+		ModelAndView mav = new ModelAndView();
+		User currentUser = userService.get(user.getId());
+		if(currentUser.getPassword().equals(user.getPassword())) {
+			session.setAttribute("currentUser", currentUser);
+			if(currentUser.getType() == 0) {
 				List<com.hing.pojo.Class> cs = classService.list();
 				List<Teacher> ts = teacherService.list();
 				List<Scheme> scs = schemeService.list();
-				mav.addObject("scs",scs);
-				mav.addObject("cs",cs);
-				mav.addObject("ts",ts);
-				mav.addObject("currentUser",user);
+				List<Course> ss = courseService.list();
+				List<User> us = userService.list();
+ 				session.setAttribute("scs",scs);
+				session.setAttribute("cs",cs);
+				session.setAttribute("ts",ts);
+				session.setAttribute("ss",ss);
+				session.setAttribute("us",us);
 				mav.setViewName("admin_index");
-			}else if(current.getType()==1) {
+			}else if(currentUser.getType()==1) {
 				mav.setViewName("headmaster_index");
-			}else if(current.getType() == 2) {
-				/**
-				 * 加载所教科目信息
-				 * 1.根据教师ID获取Teach对象和时间
-				 * 2.根据Teach.courseID获取Course对象
-				 * 3.前端展示course名字和时间
-				 * @param id
-				 * @return
-				 */
-				Teacher currentUser = teacherService.get(current.getId());
-				List<Teach> ts = teachService.getTeachByTeacher(currentUser.getId());
-				List<com.hing.pojo.Class> cs = classService.getClassByTeacher(currentUser.getId());
-				List<Object[]> courseData = new ArrayList<Object[]>(); //每个对象数组包含一个课程对象和时间
+			}else if(currentUser.getType() == 2) {
+				Teacher teacher = teacherService.get(currentUser.getId());
+				List<Teach> ts = teachService.getTeachByTeacher(teacher.getId());
+				List<com.hing.pojo.Class> cs = classService.getClassByTeacher(teacher.getId());
+				List<Object[]> courseData = new ArrayList<Object[]>(); 
 				if(ts != null) {
 					for(int i = 0 ; i < ts.size() ; i++) {
 						Course course = courseService.get(ts.get(i).getCourse().getId());
 						Date dateTime = ts.get(i).getTime();
-						DateFormat df = new SimpleDateFormat("yyyy-MM-dd日 hh:mm:ss");  
+						DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");  
 						String time = df.format(dateTime);  
 						
 						Object[] obj= {course,time,dateTime};
@@ -98,13 +105,15 @@ public class UserController {
 				}else {
 					courseData = null;
 				}//of if
-				mav.addObject("courseData",courseData);
-				mav.addObject("cs",cs);
-				mav.addObject("currentUser",currentUser);
+				session.setAttribute("courseData",courseData);
+				session.setAttribute("cs",cs);
+				session.setAttribute("teacher", teacher);
 				mav.setViewName("teacher_index");
-			}else if(current.getType() == 3) {
-				Student currentUser = studentService.get(current.getId());
-				mav.addObject("currentUser",currentUser);
+			}else if(currentUser.getType() == 3) {
+				Student student = studentService.get(currentUser.getId());
+				List<Study> ss = studyService.getStudyByStudent(student.getId());
+				session.setAttribute("student", student);
+				session.setAttribute("ss", ss);
 				mav.setViewName("student_index");
 			}else {
 				mav.setViewName("index");
@@ -136,15 +145,21 @@ public class UserController {
 	@RequestMapping("/importTeachers")
 	public ModelAndView importTeachers() {
 		ModelAndView mav = new ModelAndView();
-		/**
-		 * step1:查找还没有导入的教师列表
-		 * step2:利用循环来逐个导入
-		 */
-		List<User> us = userService.list();
-		int ucount = us.size();
+		List<User> us = userService.getTeachers();
+		int ucount= us.size();
 		List<Teacher> ts = teacherService.list();
 		int tcount = ts.size();
-		System.out.println(ucount+":"+tcount);
+		if(ucount < tcount) {
+			for(int i = 0 ; i < tcount ; i++) {
+				if(!userService.isExist(ts.get(i).getId())) {
+					User user = new User();
+					user.setId(ts.get(i).getId());
+					user.setPassword("123456");
+					user.setType(2);
+					userService.add(user);
+				}
+			}
+		}
 		
 		mav.setViewName("admin_index");
 		return mav;
@@ -153,7 +168,21 @@ public class UserController {
 	@RequestMapping("/importStudents")
 	public ModelAndView importStudents() {
 		ModelAndView mav = new ModelAndView();
-		
+		List<User> us = userService.getStudents();
+		int ucount= us.size();
+		List<Student> ss = studentService.list();
+		int scount = ss.size();
+		if(ucount < scount) {
+			for(int i = 0 ; i < scount ; i++) {
+				if(!userService.isExist(ss.get(i).getId())) {
+					User user = new User();
+					user.setId(ss.get(i).getId());
+					user.setPassword("123456");
+					user.setType(3);
+					userService.add(user);
+				}
+			}
+		}
 		
 		mav.setViewName("admin_index");
 		return mav;
@@ -176,12 +205,8 @@ public class UserController {
 			mav.addObject("currentUser",user);
 			mav.setViewName("showMyInformationAsAdmin");
 		}else if(user.getType() == 1){
-			Teacher teacher = teacherService.get(id);
-			mav.addObject("currentUser",teacher);
 			mav.setViewName("showMyInformationAsTeacher");
 		}else if(user.getType() == 2) {
-			Student student = studentService.get(id);
-			mav.addObject("currentUser",student);
 			mav.setViewName("showMyInformationAsStudent");
 		}
 		

@@ -22,20 +22,20 @@
 <body>
 	<div>
 	<form action="editMyInformation" method="post">
-		姓名：<input type="text" name="name" value="${currentUser.name }"/>
+		姓名：<input type="text" name="name" value="${sessionScope.teacher.name }"/>
 		<br><br>
-		性别：<input type="text" name="sex" value="${currentUser.sex }"/>
+		性别：<input type="text" name="sex" value="${sessionScope.teacher.sex }"/>
 		<br><br>
-		年龄：<input type="text" name="age" value="${currentUser.age }"/>
+		年龄：<input type="text" name="age" value="${sessionScope.teacher.age }"/>
 		<br><br>
-		电子邮件：<input type="text" name="email" value="${currentUser.email }"/>
+		电子邮件：<input type="text" name="email" value="${sessionScope.teacher.email }"/>
 		<br><br>
-		电话号码：<input type="text" name="tel" value="${currentUser.tel }"/>
+		电话号码：<input type="text" name="tel" value="${sessionScope.teacher.tel }"/>
 		<br><br>
-		身份证号：<input type="text" name="id_number"value="${currentUser.id_number }"/>
+		身份证号：<input type="text" name="id_number"value="${sessionScope.teacher.id_number }"/>
 		<br><br>
-		<input type="hidden" name="id" value="${currentUser.id }"/>
-		班级号：<input type="text" name="myclass.id" value="${currentUser.myclass.id }"/>
+		<input type="hidden" name="id" value="${sessionScope.teacher.id }"/>
+		班级号：<input type="text" name="myclass.id" value="${sessionScope.teacher.myclass.id }"/>
 		<input type="submit" value="修改"/>
 	</form>	
 </div>

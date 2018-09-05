@@ -35,27 +35,59 @@ document.getElementById("edit").addEventListener("click", function()
    <li><a href="#score" data-toggle="tab">成绩查询</a></li>
    <li><a href="#information" data-toggle="tab">个人信息维护</a></li>
    <li><a href="#changePassword" data-toggle="tab">密码修改</a></li>
+    <li><a href="logOut" >退出系统</a></li>
 </ul>
 <div id="myTabContent" class="tab-content">
 	<div class="tab-pane fade in active" id="index">
       <p>欢迎您！</p>
-      <input type="text" value="${currentUser.name}"/>
+      <input type="text" value="${sessionScope.student.name}"/>
    </div>
    <div class="tab-pane fade" id="score">
-   		<a href="checkMyScore?id=${currentUser.id}">查询</a>
+   		<a href="checkMyScore?id=${sessionScope.student.id}">查询</a>
       <p>成绩查询</p>
+      <table align='center' border='1' cellspacing='0'>
+	    <tr>
+	        <td>id</td>
+	        <td>course</td>
+	        <td>score</td>
+	    </tr>
+	    <c:forEach items="${sessionScope.ss}" var="c" varStatus="st">
+	        <tr>
+	            <td>${c.student.id}</td>
+	            <td>${c.course.name}</td>
+	            <td>${c.score}</td>  
+	        </tr>
+	    </c:forEach>
+	</table>
    </div>
    <div class="tab-pane fade" id="information">
       <p>信息维护</p>
-      <a href="showMyInformation?id=${currentUser.id}">个人信息</a>
+      <a href="showMyInformation?id=${sessionScope.student.id}">个人信息</a>
+      <form action="editMyInformation" method="post">
+		姓名：<input type="text" name="name" value="${sessionScope.student.name }"/>
+		<br><br>
+		性别：<input type="text" name="sex" value="${sessionScope.student.sex }"/>
+		<br><br>
+		年龄：<input type="text" name="age" value="${sessionScope.student.age }"/>
+		<br><br>
+		电子邮件：<input type="text" name="email" value="${sessionScope.student.email }"/>
+		<br><br>
+		电话号码：<input type="text" name="tel" value="${sessionScope.student.tel }"/>
+		<br><br>
+		身份证号：<input type="text" name="id_number"value="${sessionScope.student.id_number }"/>
+		<br><br>
+		<input type="hidden" name="id" value="${sessionScope.student.id }"/>
+		班级号：<input type="text" name="myclass.id" value="${sessionScope.student.myclass.id }"/>
+		<input type="submit" value="修改"/>
+	 </form>	
    </div>
    
     <div class="tab-pane fade" id="changePassword">
       <p>修改密码</p>
       <div>
 		<form action="updateUser" method="post">
-			<input type="hidden"  name="id" value="${currentUser.id }"/>
-			<input type="hidden"  name="type" value="${type }"/>
+			<input type="hidden"  name="id" value="${sessionScope.student.id }"/>
+			<input type="hidden"  name="type" value="${sessionScope.currentUser.type }"/>
 			
 			当前密码：<input type="text" name="currentPassword"/>
 			<br><br>

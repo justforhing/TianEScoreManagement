@@ -19,7 +19,9 @@
 		<select id="get" parameterType="String" resultType="User">
 			select * from users where id = #{id}
 		</select>
-		
+		<select id="getUserByType" parameterType="int" resultType="User">
+			select * from users where type = #{type}
+		</select>
 		<select id="list" resultType="User">
 			select * from users
 		</select>
